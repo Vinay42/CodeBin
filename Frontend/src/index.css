@@ -1,0 +1,191 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* CodeBin Design System - Light Mode */
+    --background: 0 0% 100%;
+    --background-alt: 0 0% 98%;
+    --foreground: 215 13.8% 11%;
+    --foreground-light: 215 8.8% 25%;
+    
+    /* Navbar specific colors - better contrast */
+    --navbar-background: 215 20% 92%;
+    --navbar-border: 0 0% 0% / 0.08;
+    --navbar-shadow: 0 1px 4px 0 hsl(0 0% 0% / 0.12);
+    
+    /* Editor specific colors */
+    --editor-background: 0 0% 99%;
+    --editor-foreground: 215 13.8% 11%;
+    --editor-line-numbers: 215 8.8% 66%;
+    --editor-selection: 231 100% 95%;
+    
+    /* Terminal colors - light mode */
+    --terminal-background: 0 0% 98%;
+    --terminal-foreground: 215 13.8% 11%;
+    --terminal-green: 142 76% 36%;
+    --terminal-red: 0 84% 60%;
+    --terminal-yellow: 45 93% 47%;
+    
+    /* Panel colors */
+    --panel-background: 0 0% 98%;
+    --panel-border: 215 14% 89%;
+    
+    /* Brand colors - Indigo (#4F46E5) */
+    --primary: 231 48% 48%;
+    --primary-glow: 231 100% 67%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 215 16% 95%;
+    --secondary-foreground: 215 13.8% 11%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 215 13.8% 11%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 13.8% 11%;
+    
+    --muted: 215 16% 95%;
+    --muted-foreground: 215 8.8% 46%;
+    
+    --accent: 215 16% 95%;
+    --accent-foreground: 215 13.8% 11%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    
+    --border: 215 14% 89%;
+    --input: 215 14% 89%;
+    --ring: 231 48% 48%;
+    
+    --success: 142 76% 36%;
+    --warning: 45 93% 47%;
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-terminal: linear-gradient(180deg, hsl(var(--terminal-background)), hsl(220 13% 9%));
+    
+    /* Shadows */
+    --shadow-glow: 0 0 20px hsl(var(--primary) / 0.3);
+    --shadow-elegant: 0 4px 20px -4px hsl(var(--foreground) / 0.1);
+    --shadow-navbar: var(--navbar-shadow);
+    
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    /* CodeBin Design System - Dark Mode */
+    --background: 220 13% 6%;
+    --background-alt: 220 13% 8%;
+    --foreground: 0 0% 95%;
+    --foreground-light: 0 0% 100%;
+    
+    /* Navbar specific colors */
+    --navbar-background: 220 13% 11%;
+    --navbar-border: 255 100% 100% / 0.05;
+    --navbar-shadow: 0 1px 4px 0 hsl(0 0% 0% / 0.2);
+    
+    /* Editor specific colors */
+    --editor-background: 215 28% 12%;
+    --editor-foreground: 0 0% 90%;
+    --editor-line-numbers: 215 14% 45%;
+    --editor-selection: 231 48% 25%;
+    
+    /* Terminal colors */
+    --terminal-background: 0 0% 6%;
+    --terminal-foreground: 0 0% 90%;
+    --terminal-green: 142 68% 55%;
+    --terminal-red: 0 84% 70%;
+    --terminal-yellow: 45 93% 67%;
+    
+    /* Panel colors */
+    --panel-background: 217 33% 14%;
+    --panel-border: 215 28% 18%;
+    
+    /* Brand colors - Indigo for dark mode */
+    --primary: 231 48% 52%;
+    --primary-glow: 231 100% 67%;
+    --primary-foreground: 0 0% 9%;
+    
+    --secondary: 215 28% 17%;
+    --secondary-foreground: 0 0% 95%;
+    
+    --card: 220 13% 6%;
+    --card-foreground: 0 0% 95%;
+    
+    --popover: 220 13% 6%;
+    --popover-foreground: 0 0% 95%;
+    
+    --muted: 215 28% 17%;
+    --muted-foreground: 215 14% 65%;
+    
+    --accent: 215 28% 17%;
+    --accent-foreground: 0 0% 95%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    
+    --border: 215 28% 18%;
+    --input: 215 28% 18%;
+    --ring: 231 48% 52%;
+    
+    --success: 142 68% 55%;
+    --warning: 45 93% 67%;
+    
+    /* Enhanced shadows for dark mode */
+    --shadow-glow: 0 0 30px hsl(var(--primary) / 0.4);
+    --shadow-elegant: 0 4px 20px -4px hsl(0 0% 0% / 0.3);
+    --shadow-navbar: var(--navbar-shadow);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  
+  /* Code font for Monaco Editor */
+  .monaco-editor {
+    font-family: 'Fira Code', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace !important;
+  }
+  
+  /* Custom scrollbars */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground));
+  }
+  
+  /* Terminal styles */
+  .terminal {
+    background: var(--gradient-terminal);
+    border: 1px solid hsl(var(--border));
+  }
+  
+  /* Smooth transitions */
+  * {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
