@@ -27,7 +27,9 @@ CodeBridge is a real-time collaborative code editor that allows multiple users t
 - **Auto-reconnect Support** – Handled by Socket.IO
 
 # Architecture Diagram
-![image](./uploads/image.png)
 
-![image](./uploads/Screenshot%202026-01-13%20141755.png)
+<img src="./uploads/image.png" alt="Alt text description" width="200" height="150">
+
+
+<img src="./uploads/Screenshot 2026-01-13 141755.png" alt="Alt text description" width="200" height="150">
 
