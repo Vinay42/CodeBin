@@ -120,4 +120,4 @@ npm run dev
 
 ## 📧 Contact
 
-Aman Singh - vinaythakor47@gmail.com
+Vinay Thakor - vinaythakor47@gmail.com
