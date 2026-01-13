@@ -26,10 +26,74 @@ CodeBridge is a real-time collaborative code editor that allows multiple users t
 
 - **Auto-reconnect Support** – Handled by Socket.IO
 
-# Architecture Diagram
+# 🏗 Architecture Diagram
 
-<img src="./uploads/image.png" alt="Alt text description" width="200" height="150">
+<img src="./uploads/image.png" alt="Alt text description" width="700" height="600">
 
 
-<img src="./uploads/Screenshot 2026-01-13 141755.png" alt="Alt text description" width="200" height="150">
+<img src="./uploads/Screenshot 2026-01-13 141755.png" alt="Alt text description" width="800" height="650">
 
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js (v16 or later)
+- Docker (for code execution feature)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/Vinay42/CodeBin
+cd codebin
+```
+
+2. Install server dependencies:
+```bash
+cd server
+npm install
+```
+
+3. Install client dependencies:
+```bash
+cd ../client
+npm install
+```
+
+### Configuration
+
+1. Create a `.env` file in the server directory:
+```env
+PORT = 3001,
+BACKEND_URL = "http://localhost:3001",
+FRONTEND_ORIGIN = "http://localhost:5173"
+```
+
+2. Create a `.env` file in the client directory:
+```env
+VITE_SOCKET_URL = "http://localhost:3001"
+```
+
+### Running the Application
+
+1. Start the server:
+```bash
+cd server
+npm run dev
+```
+
+2. Start the client:
+```bash
+cd client
+npm run dev
+```
+
+3. Access the application at `http://localhost:5173`
+
+# Demo
+
+<img src="./uploads/demo1.png" alt="Alt text description" width="1200" height="600">
+
+
+<img src="./uploads/demo2.png" alt="Alt text description" width="800" height="650">
