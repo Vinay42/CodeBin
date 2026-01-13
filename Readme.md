@@ -91,9 +91,33 @@ npm run dev
 
 3. Access the application at `http://localhost:5173`
 
-# Demo
+## Demo
 
 <img src="./uploads/demo1.png" alt="Alt text description" width="1200" height="600">
 
 
 <img src="./uploads/demo2.png" alt="Alt text description" width="800" height="650">
+
+## 🛠 Tech Stack
+### Frontend
+- React 18
+- Socket.IO Client
+- Tailwind CSS
+- Monaco Editor
+- Vite
+- Lucide Icons
+
+### Backend
+- Node.js
+- Express
+- Socket.IO
+- Docker SDK
+- dotenv
+
+### Development Tools
+- Git
+- Docker
+
+## 📧 Contact
+
+Aman Singh - vinaythakor47@gmail.com
