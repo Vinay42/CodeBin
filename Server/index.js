@@ -179,6 +179,17 @@ io.on("connection", (socket) => {
       jobDir
     })
 
+    const EXECUTION_TIMEOUT = 5000 // 5 seconds
+
+  const killTimer = setTimeout(() => {
+    if (!child.killed) {
+      child.kill("SIGKILL")
+      io.to(roomId).emit("program-output", {
+        output: "\n⏱ Execution timed out (5s limit)\n"
+      })
+    }
+  }, EXECUTION_TIMEOUT)
+
     child.stdout.on("data", (data) => {
       // console.log("Sending output:", data.toString())
       io.to(roomId).emit("program-output", { output: data.toString() })
@@ -189,6 +200,7 @@ io.on("connection", (socket) => {
     })
 
     child.on("close", () => {
+      clearTimeout(killTimer)
       const room = rooms[roomId]
       if (!room) return
 
