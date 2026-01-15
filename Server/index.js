@@ -15,7 +15,17 @@ const runningProcesses = new Map()
 
 
 const app = express()
-app.use(cors())
+app.use(cors(
+  {
+  origin: process.env.FRONTEND_ORIGIN,
+  methods: ["GET", "POST"],
+  credentials: true
+}
+))
+
+app.get("/", (req, res) => {
+  res.status(200).send("🚀 CodeBridge Server is running")
+})
 
 const server = http.createServer(app)
 
@@ -40,9 +50,18 @@ int main() {
 }`
 }
 
+function cleanupJob(jobDir) {
+  try {
+    fs.rmSync(jobDir, { recursive: true, force: true })
+    // console.log(" Cleaned job directory:", jobDir)
+  } catch (err) {
+    // console.error(" Failed to cleanup job:", err.message)
+  }
+}
+
 
 io.on("connection", (socket) => {
-  console.log("Connected:", socket.id)
+  // console.log("Connected:", socket.id)
 
 
   socket.on("check-username", ({ roomId, username }) => {
@@ -87,7 +106,7 @@ io.on("connection", (socket) => {
       username,
     })
 
-    console.log(rooms)
+    // console.log(rooms)
 
     socket.join(roomId)
 
@@ -156,11 +175,12 @@ io.on("connection", (socket) => {
 
     runningProcesses.set(socket.id, {
       roomId,
-      process: child
+      process: child,
+      jobDir
     })
 
     child.stdout.on("data", (data) => {
-      console.log("Sending output:", data.toString())
+      // console.log("Sending output:", data.toString())
       io.to(roomId).emit("program-output", { output: data.toString() })
     })
 
@@ -174,9 +194,10 @@ io.on("connection", (socket) => {
 
       room.isRunning = false
       room.runningBy = null
-
+      
       io.to(roomId).emit("execution-ended")
       const entry = runningProcesses.get(socket.id)
+      cleanupJob(entry.jobDir)
       if (!entry) return
     })
   })
@@ -210,7 +231,9 @@ io.on("connection", (socket) => {
     const entry = runningProcesses.get(socket.id)
     if (entry?.process) {
       entry.process.kill()
+      cleanupJob(entry.jobDir)
       runningProcesses.delete(socket.id)
+      
     }
     for (const roomId in rooms) {
 

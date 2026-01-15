@@ -1,1 +1,0 @@
-print("Hello, World!\n Hhh \n f\n g\n \n sd\n")
