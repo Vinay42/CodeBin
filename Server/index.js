@@ -264,6 +264,8 @@ io.on("connection", (socket) => {
   })
 })
 
-server.listen(3001, () => {
-  console.log(`Server running on ${process.env.BACKEND_URL}`)
+const PORT = process.env.PORT || 3001
+
+server.listen(PORT,"0.0.0.0", () => {
+  console.log(`Server running on ${process.env.BACKEND_URL}:${PORT}`)
 })
