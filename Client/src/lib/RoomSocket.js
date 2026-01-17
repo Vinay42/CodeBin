@@ -7,7 +7,7 @@ let roomId1 = null
 export function connectSocket() {
   if (!socket) {
     socket = io(import.meta.env.VITE_SOCKET_URL, {
-      transports: ["polling"],
+      transports: ["websocket"],
     })
 
     socket.on("connect", () => {
