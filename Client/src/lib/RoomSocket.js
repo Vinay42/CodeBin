@@ -123,6 +123,25 @@ export function changeLanguage(roomId, language) {
   socket.emit("change-language", { roomId, language })
 }
 
+// Gemini Code Review Functions
+export function reviewCode(roomId, code, language) {
+  if (!socket || !socket.connected) {
+    console.warn("Socket not connected")
+    return
+  }
+  socket.emit("review-code", { roomId, code, language })
+}
+
+export function onReviewStarted(cb) {
+  socket.off("review-started")
+  socket.on("review-started", cb)
+}
+
+export function onReviewResult(cb) {
+  socket.off("review-result")
+  socket.on("review-result", cb)
+}
+
 export function disconnectSocket() {
   if (socket) {
     socket.off("sync-code")
@@ -131,6 +150,8 @@ export function disconnectSocket() {
     socket.off("program-output")
     socket.off("execution-started")
     socket.off("execution-ended")
+    socket.off("review-started")
+    socket.off("review-result")
     socket.disconnect()
     socket = null
   }

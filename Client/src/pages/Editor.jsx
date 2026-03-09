@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from "react"
 import { useNavigate, useLocation, useParams } from "react-router-dom"
 import {
-  Code2, Copy, LogOut, Play, Download, RefreshCcw, Menu, X
+  Code2, Copy, LogOut, Play, Download, RefreshCcw, Menu, X, Sparkles
 } from "lucide-react"
 
 import { Button } from "../components/ui/Button"
 import { Client } from "../components/ui/Client"
 import { CodeEditor } from "../components/CodeEditor"
 import { Console } from "../components/Console"
+import { CodeReview } from "../components/CodeReview"
 
 import {
   connectSocket,
@@ -22,7 +23,10 @@ import {
   onCodeChange,
   onLanguageChanged,
   executionEnded,
-  executionStarted
+  executionStarted,
+  reviewCode,
+  onReviewStarted,
+  onReviewResult
 } from "../lib/RoomSocket"
 
 export default function EditorPage() {
@@ -46,6 +50,12 @@ export default function EditorPage() {
   const [isRunning, setIsRunning] = useState(false)
   const [showSidebar, setShowSidebar] = useState(false)
   const [showConsole, setShowConsole] = useState(true)
+
+  // Code Review State
+  const [showReview, setShowReview] = useState(false)
+  const [isReviewing, setIsReviewing] = useState(false)
+  const [reviewData, setReviewData] = useState(null)
+  const [reviewingUser, setReviewingUser] = useState(null)
 
   useEffect(() => {
     if (!location.state?.username) {
@@ -94,6 +104,19 @@ export default function EditorPage() {
     onProgramOutput(({ output }) => {
       setConsoleOutput(prev => prev + output)
       setIsRunning(false)
+    })
+
+    // Code Review Event Listeners
+    onReviewStarted(({ username }) => {
+      setIsReviewing(true)
+      setReviewingUser(username)
+      setShowReview(true)
+      setReviewData(null)
+    })
+
+    onReviewResult((result) => {
+      setIsReviewing(false)
+      setReviewData(result)
     })
 
     joinRoom(roomId, location.state.username)
@@ -153,6 +176,12 @@ export default function EditorPage() {
     //   code: "",
     // })
     handleCodeChange("")
+  }
+
+  const handleReviewCode = () => {
+    if (!code) return
+    setShowReview(true)
+    reviewCode(roomId, code, language)
   }
 
 
@@ -273,6 +302,17 @@ export default function EditorPage() {
                 <RefreshCcw className="h-4 w-4" />
               </button>
 
+              {/* Review Code Button */}
+              <button
+                onClick={handleReviewCode}
+                disabled={isReviewing}
+                className="bg-purple-600 hover:bg-purple-700 dark:bg-purple-600 dark:hover:bg-purple-700 disabled:bg-purple-300 dark:disabled:bg-purple-800 disabled:opacity-50 text-white px-2 sm:px-4 py-1.5 rounded flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-medium transition-colors"
+                title="AI Code Review"
+              >
+                <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Review</span>
+              </button>
+
               {/* Run Button */}
               <button
                 onClick={handleRunCode}
@@ -312,6 +352,15 @@ export default function EditorPage() {
           </div>
         </main>
       </div>
+
+      {/* Code Review Modal */}
+      <CodeReview
+        isOpen={showReview}
+        onClose={() => setShowReview(false)}
+        isLoading={isReviewing}
+        reviewData={reviewData}
+        reviewingUser={reviewingUser}
+      />
     </div>
   )
 }

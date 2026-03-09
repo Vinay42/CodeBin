@@ -9,12 +9,51 @@ import fs from "fs"
 import { getDockerCommand } from "./dockerCommand.js"
 import { spawn } from "child_process"
 import dotenv from "dotenv"
+import { GoogleGenAI } from "@google/genai"
 dotenv.config()
 
+// Initialize Gemini AI
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY })
+
+async function reviewCodeWithGemini(code, language) {
+  try {
+    const prompt = `You are an expert code reviewer. Please review the following ${language} code and provide:
+
+1. **Code Quality**: Rate the overall code quality (Excellent/Good/Fair/Poor)
+2. **Issues Found**: List any bugs, errors, or potential problems
+3. **Suggestions**: Provide specific improvements for:
+   - Performance optimizations
+   - Code readability
+   - Best practices
+   - Security concerns (if any)
+4. **Corrected Code**: If there are issues, provide the corrected version
+Keep the review concise but helpful. Format your response in markdown.
+
+\`\`\`${language}
+${code}
+\`\`\`
+
+`
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt
+    })
+    return {
+      success: true,
+      review: response.text
+    }
+  } catch (error) {
+    console.error("Gemini API Error:", error.message)
+    return {
+      success: false,
+      error: error.message || "Failed to review code"
+    }
+  }
+}
+
 const runningProcesses = new Map()
-
-
 const app = express()
+
 app.use(cors(
   {
   origin: process.env.FRONTEND_ORIGIN,
@@ -71,12 +110,10 @@ io.on("connection", (socket) => {
     const exists = users.some(
       (u) => u.username.toLowerCase() === username.toLowerCase()
     )
-    
     socket.emit("username-status", {
       available: !exists,
     })
  })
-
 
   socket.on("join-room", ({ roomId, username }) => {
 
@@ -100,7 +137,6 @@ io.on("connection", (socket) => {
       return
     }
 
-
     rooms[roomId].users.push({
       socketId: socket.id,
       username,
@@ -109,7 +145,6 @@ io.on("connection", (socket) => {
     // console.log(rooms)
 
     socket.join(roomId)
-
     socket.emit("join-success", {
       roomId,
       username
@@ -206,7 +241,7 @@ io.on("connection", (socket) => {
 
       room.isRunning = false
       room.runningBy = null
-      
+
       io.to(roomId).emit("execution-ended")
       const entry = runningProcesses.get(socket.id)
       cleanupJob(entry.jobDir)
@@ -239,18 +274,42 @@ io.on("connection", (socket) => {
     })
   })
 
+  // Gemini Code Review Handler
+
+  socket.on("review-code", async ({ roomId, code, language }) => {
+    const room = rooms[roomId]
+    if (!room) return
+    const username = room.users.find(u => u.socketId === socket.id)?.username
+
+    // Notify everyone that review is starting
+    io.to(roomId).emit("review-started", { username })
+    try {
+      const result = await reviewCodeWithGemini(code, language)
+      io.to(roomId).emit("review-result", {
+        success: result.success,
+        review: result.review,
+        error: result.error,
+        reviewedBy: username
+      })
+    } catch (error) {
+      io.to(roomId).emit("review-result", {
+        success: false,
+        error: "Failed to get code review",
+        reviewedBy: username
+      })
+    }
+  })
+
   socket.on("disconnect", () => {
     const entry = runningProcesses.get(socket.id)
     if (entry?.process) {
       entry.process.kill()
       cleanupJob(entry.jobDir)
       runningProcesses.delete(socket.id)
-      
     }
     for (const roomId in rooms) {
 
       const room = rooms[roomId]
-
       room.users = room.users.filter(
         (u) => u.socketId !== socket.id
       )
@@ -264,7 +323,7 @@ io.on("connection", (socket) => {
   })
 })
 
-const PORT = process.env.PORT || 301
+const PORT = process.env.PORT || 3001
 
 server.listen(PORT,"0.0.0.0", () => {
   console.log(`Server running on ${process.env.BACKEND_URL}:${PORT}`)
