@@ -121,4 +121,4 @@ npm run dev
 
 ## 📧 Contact
 
-Vinay Thakor - vinaythakor47@gmail.com
+Himanshu Verma -himanshuhoney203@gmail.com
