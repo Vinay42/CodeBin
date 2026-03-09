@@ -51,6 +51,44 @@ ${code}
   }
 }
 
+async function getCodingAssistanceWithGemini(code, language, question) {
+  try {
+    const prompt = `You are a senior ${language} programming assistant helping a student in a collaborative code editor.
+
+Use the provided code and answer the user's question clearly.
+- Give a direct answer first.
+- If needed, include a short code example.
+- Mention concrete fixes relevant to this exact code.
+- Keep response concise and practical.
+
+Current ${language} code:
+
+\`\`\`${language}
+${code}
+\`\`\`
+
+User question:
+${question}
+`
+
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt
+    })
+
+    return {
+      success: true,
+      answer: response.text
+    }
+  } catch (error) {
+    console.error("Gemini Assistant API Error:", error.message)
+    return {
+      success: false,
+      error: error.message || "Failed to get coding assistance"
+    }
+  }
+}
+
 const runningProcesses = new Map()
 const app = express()
 
@@ -296,6 +334,38 @@ io.on("connection", (socket) => {
         success: false,
         error: "Failed to get code review",
         reviewedBy: username
+      })
+    }
+  })
+
+  // Gemini Coding Assistant Handler
+  socket.on("assistant-query", async ({ roomId, code, language, question }) => {
+    const room = rooms[roomId]
+    if (!room) return
+    if (!question || !question.trim()) return
+
+    const username = room.users.find(u => u.socketId === socket.id)?.username
+
+    io.to(roomId).emit("assistant-started", {
+      username,
+      question
+    })
+
+    try {
+      const result = await getCodingAssistanceWithGemini(code, language, question)
+      io.to(roomId).emit("assistant-result", {
+        success: result.success,
+        answer: result.answer,
+        error: result.error,
+        askedBy: username,
+        question
+      })
+    } catch (error) {
+      io.to(roomId).emit("assistant-result", {
+        success: false,
+        error: "Failed to get coding assistance",
+        askedBy: username,
+        question
       })
     }
   })

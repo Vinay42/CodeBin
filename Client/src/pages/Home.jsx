@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { Code2, ArrowRight, Users, Terminal, Shield } from "lucide-react"
+import { Code2, ArrowRight, Users, Terminal, Bot } from "lucide-react"
 import { Button } from "./../components/ui/Button"
 import { ThemeToggle } from "./../components/ThemeToggle"
 
@@ -60,10 +60,10 @@ export default function HomePage() {
           </div>
 
           <div className="flex flex-col items-center gap-3">
-            <Shield className="h-8 w-8 text-purple-600" />
-            <h3 className="text-lg font-semibold">Safe by Design</h3>
+            <Bot className="h-8 w-8 text-indigo-600" />
+            <h3 className="text-lg font-semibold">AI-Powered Support</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Isolated execution and controlled inputs to prevent misuse.
+              Get instant code reviews and ask AI coding questions while you build.
             </p>
           </div>
 

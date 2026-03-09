@@ -1,4 +1,4 @@
-import { use, useEffect, useRef } from "react"
+import { useEffect } from "react"
 import Editor from "@monaco-editor/react"
 import { useTheme } from "../contexts/ThemeContext.jsx"
 

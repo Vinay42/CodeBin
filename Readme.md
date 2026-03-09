@@ -23,6 +23,10 @@ CodeBridge is a real-time collaborative code editor that allows multiple users t
 
 - **File Download** – Download current code with correct extension
 
+- **AI Code Review (Gemini)** – Generate markdown-based code review with quality rating, issue detection, and suggested fixes
+
+- **AI Coding Assistant (Gemini)** – Ask context-aware questions about the current code and language
+
 - **Fast UI** – Minimal, clean, performance-focused design
 
 - **Auto-reconnect Support** – Handled by Socket.IO
@@ -32,7 +36,7 @@ CodeBridge is a real-time collaborative code editor that allows multiple users t
 <img src="./uploads/image.png" alt="Alt text description" width="700" height="600">
 
 
-<img src="./uploads/Screenshot 2026-01-13 141755.png" alt="Alt text description" width="800" height="650">
+<img src="./uploads/image2.png" alt="Alt text description" width="800" height="650">
 
 
 ## 🚀 Getting Started
@@ -66,14 +70,15 @@ npm install
 
 1. Create a `.env` file in the server directory:
 ```env
-PORT = 3001,
-BACKEND_URL = "http://localhost:3001",
-FRONTEND_ORIGIN = "http://localhost:5173"
+PORT = 3001
+BACKEND_URL = http://localhost
+FRONTEND_ORIGIN = http://localhost:5173
+GEMINI_API_KEY = your_gemini_api_key
 ```
 
 2. Create a `.env` file in the client directory:
 ```env
-VITE_SOCKET_URL = "http://localhost:3001"
+VITE_SOCKET_URL = http://localhost:3001
 ```
 
 ### Running the Application
@@ -91,6 +96,14 @@ npm run dev
 ```
 
 3. Access the application at `http://localhost:5173`
+
+### Using AI in the Editor
+
+1. Join or create a room.
+2. Write or paste code in Monaco editor.
+3. Use **AI Code Review** to analyze current code.
+4. Use **AI Assistant** to ask targeted coding questions.
+5. Review shared AI responses with all participants in the room.
 
 ## Demo
 
@@ -121,4 +134,4 @@ npm run dev
 
 ## 📧 Contact
 
-Himanshu Verma -himanshuhoney203@gmail.com
+Vinay Thakor -vinaythakor47@gmail.com

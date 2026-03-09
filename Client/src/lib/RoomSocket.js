@@ -2,7 +2,6 @@ import { io } from "socket.io-client"
 
 
 let socket = null
-let roomId1 = null
 
 export function connectSocket() {
   if (!socket) {
@@ -38,12 +37,11 @@ export function checkUsername(roomId, username) {
 }
 
 export function joinRoom(roomId, username) {
-  roomId1 = roomId
   socket.emit("join-room", { roomId, username })
 }
 
 export function onJoinError(callback) {
-  socket.on("join-error", callback)
+  socket.once("join-error", callback)
 }
 
 export function offJoinError() {
@@ -142,6 +140,24 @@ export function onReviewResult(cb) {
   socket.on("review-result", cb)
 }
 
+export function askCodingAssistant(roomId, code, language, question) {
+  if (!socket || !socket.connected) {
+    console.warn("Socket not connected")
+    return
+  }
+  socket.emit("assistant-query", { roomId, code, language, question })
+}
+
+export function onAssistantStarted(cb) {
+  socket.off("assistant-started")
+  socket.on("assistant-started", cb)
+}
+
+export function onAssistantResult(cb) {
+  socket.off("assistant-result")
+  socket.on("assistant-result", cb)
+}
+
 export function disconnectSocket() {
   if (socket) {
     socket.off("sync-code")
@@ -152,6 +168,8 @@ export function disconnectSocket() {
     socket.off("execution-ended")
     socket.off("review-started")
     socket.off("review-result")
+    socket.off("assistant-started")
+    socket.off("assistant-result")
     socket.disconnect()
     socket = null
   }

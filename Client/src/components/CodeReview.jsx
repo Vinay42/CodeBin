@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react"
 import { X, Loader2, Sparkles, Copy, Check } from "lucide-react"
+import { MarkdownContent } from "./MarkdownContent"
 
 export function CodeReview({ isOpen, onClose, isLoading, reviewData, reviewingUser }) {
   const [copied, setCopied] = useState(false)
@@ -97,13 +98,8 @@ export function CodeReview({ isOpen, onClose, isLoading, reviewData, reviewingUs
               </div>
             </div>
           ) : reviewData?.review ? (
-            <div className="prose prose-slate dark:prose-invert max-w-none">
-              <div 
-                className="text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap"
-                dangerouslySetInnerHTML={{ 
-                  __html: formatMarkdown(reviewData.review) 
-                }}
-              />
+            <div className="max-w-none">
+              <MarkdownContent content={reviewData.review} />
               {reviewData.reviewedBy && (
                 <p className="text-sm text-slate-400 dark:text-slate-500 mt-6 pt-4 border-t border-slate-200 dark:border-slate-700">
                   Review requested by {reviewData.reviewedBy}
@@ -120,27 +116,4 @@ export function CodeReview({ isOpen, onClose, isLoading, reviewData, reviewingUs
       </div>
     </div>
   )
-}
-
-// Simple markdown formatter
-function formatMarkdown(text) {
-  if (!text) return ""
-  
-  return text
-    // Code blocks
-    .replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre class="bg-slate-100 dark:bg-slate-800 rounded-lg p-4 overflow-x-auto my-4"><code class="text-sm">$2</code></pre>')
-    // Inline code
-    .replace(/`([^`]+)`/g, '<code class="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-sm text-purple-600 dark:text-purple-400">$1</code>')
-    // Bold
-    .replace(/\*\*([^*]+)\*\*/g, '<strong class="font-semibold text-slate-900 dark:text-white">$1</strong>')
-    // Headers
-    .replace(/^### (.+)$/gm, '<h3 class="text-lg font-semibold text-slate-900 dark:text-white mt-6 mb-2">$1</h3>')
-    .replace(/^## (.+)$/gm, '<h2 class="text-xl font-semibold text-slate-900 dark:text-white mt-6 mb-3">$1</h2>')
-    .replace(/^# (.+)$/gm, '<h1 class="text-2xl font-bold text-slate-900 dark:text-white mt-6 mb-4">$1</h1>')
-    // Lists
-    .replace(/^- (.+)$/gm, '<li class="ml-4 list-disc text-slate-700 dark:text-slate-300">$1</li>')
-    .replace(/^\d+\. (.+)$/gm, '<li class="ml-4 list-decimal text-slate-700 dark:text-slate-300">$1</li>')
-    // Line breaks
-    .replace(/\n\n/g, '<br/><br/>')
-    .replace(/\n/g, '<br/>')
 }
