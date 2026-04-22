@@ -23,6 +23,6 @@ jobs:
             git pull origin main
             npm install
             npm run build
-            sudo rm -rf /var/www/CodeBin/Client/*
-            sudo cp -r dist/* /var/www/CodeBin/Client
+            sudo rm -rf /var/www/codebin/client/*
+            sudo cp -r dist/* /var/www/codebin/client
             sudo systemctl reload nginx
