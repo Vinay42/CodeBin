@@ -63,7 +63,7 @@ export default function HomePage() {
             <Bot className="h-8 w-8 text-indigo-600" />
             <h3 className="text-lg font-semibold">AI-Powered Support</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Get instant code reviews and ask AI coding questions while you build.
+              Get instant code reviews and ask AI coding questions while you build .
             </p>
           </div>
 
