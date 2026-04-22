@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { connectSocket, checkUsername, onJoinError, joinRoom, onJoinSuccess } from "../lib/RoomSocket"
 import { Button } from "./../components/ui/Button"
@@ -14,7 +14,10 @@ function generateRoomId() {
 
 export default function CreateRoom() {
   const navigate = useNavigate()
-  connectSocket()
+  
+  useEffect(() => {
+    connectSocket()
+  }, [])
 
   const [roomId, setRoomId] = useState("")
   const [username, setUsername] = useState("")
