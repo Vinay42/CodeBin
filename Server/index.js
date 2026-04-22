@@ -101,7 +101,7 @@ app.use(cors(
 ))
 
 app.get("/", (req, res) => {
-  res.status(200).send("🚀 CodeBin Server is running")
+  res.status(200).send("🚀 CodeBin Backend is running")
 })
 
 const server = http.createServer(app)
